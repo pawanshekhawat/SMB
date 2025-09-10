@@ -4,6 +4,8 @@ export async function GET(req) {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
 
+  console.log("Meta verification request:", { mode, token, challenge });
+
   const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "my_secret_token";
 
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
