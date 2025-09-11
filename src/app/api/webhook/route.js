@@ -1,3 +1,24 @@
+// app/api/webhook/route.js
+
+// ✅ Handle GET (verification step)
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "my_secret_token"; // set in FB dashboard
+
+  const mode = searchParams.get("hub.mode");
+  const token = searchParams.get("hub.verify_token");
+  const challenge = searchParams.get("hub.challenge");
+
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("Webhook verified successfully ✅");
+    return new Response(challenge, { status: 200 });
+  } else {
+    console.warn("Webhook verification failed ❌");
+    return new Response("Verification failed", { status: 403 });
+  }
+}
+
+// ✅ Handle POST (actual webhook events)
 export async function POST(req) {
   try {
     const body = await req.json();
